@@ -511,7 +511,7 @@ DEPENDENCIES
   puma
   rack-attack
   rack-mini-profiler
-  rails (> 8.0, < 8.1)
+  rails
   rb-readline
   rexml
   rotp
