@@ -485,6 +485,7 @@ DEPENDENCIES
   capybara
   cgi
   commonmarker (~> 2.6.3)
+  crass
   database_cleaner
   database_consistency
   factory_bot_rails

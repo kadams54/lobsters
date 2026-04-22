@@ -50,7 +50,6 @@ html {
 	/* avoid automatic resizing of some text elements on phones in landscape */
 	-moz-text-size-adjust: none;
 	-webkit-text-size-adjust: none;
-	text-size-adjust: none;
 }
 
 body, textarea, input, button {
@@ -186,9 +185,6 @@ textarea:focus {
 	outline: var(--input-outline-width) solid var(--color-box-border-focus);
 	border-color: transparent;
 	color: var(--color-fg);
-}
-textarea {
-	resize: vertical;
 }
 input[type="text"],
 input[type="search"],
@@ -329,7 +325,7 @@ input.btn-link:focus-visible {
 	padding: 0;
 	margin: -1px;
 	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
 	white-space: nowrap;
 	border-width: 0;
 }
@@ -717,13 +713,14 @@ li.story .byline {
 .comment.replied .flagger {
 	color: var(--color-fg-contrast-4-5);
 }
-/* preserve selection made elsewhere when clicking */
+/* preserve user's selection of a quote when clicking 'reply' */
 li .byline a.comment_replier {
+	-webkit-user-select: none;
 	user-select: none;
 }
 span.new_user, a.new_user,
 li .byline a.new_user {
-	color: var(--color-fg-affirmative);
+	#color: var(--color-fg-affirmative);
 }
 span.inactive_user, a.inactive_user,
 li .byline a.inactive_user,
@@ -789,14 +786,12 @@ ol.stories.list details.story_content {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 3;
-	line-clamp: 3;
 	overflow: hidden;
 }
 
-ol.stories.list details.story_content:open {
+ol.stories.list details.story_content[open] {
 	color: var(--color-fg-contrast-10);
 	-webkit-line-clamp: none;
-	line-clamp: none;
 }
 
 nav.morelink {
@@ -846,7 +841,7 @@ div.page_link_buttons span {
 div.story_text {
 	margin-bottom: 1.5em;
 	max-width: 45rem;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 div.story_text p {
 	margin: 0.75em 0;
@@ -861,7 +856,7 @@ a#story_text_expander {
 
 div.comment_text {
 	max-width: 45rem;
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 	overflow: hidden;
 }
 .controls {
@@ -1039,7 +1034,6 @@ div#domain_box input[type=text] {
 }
 div#story_box #story_tags {
 	width: 624px;
-	height: 2rem;
 }
 div#story_box textarea {
 	width: 600px;
