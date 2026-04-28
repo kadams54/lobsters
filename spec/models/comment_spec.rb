@@ -9,6 +9,28 @@ describe Comment do
     expect(c.short_id).to match(/^\A[a-zA-Z0-9]{1,10}\z/)
   end
 
+  describe "is_disownable_by_user?" do
+    let(:user) { create(:user) }
+    let(:story) { create(:story) }
+
+    it "is true for old comments without a hat" do
+      comment = create(:comment, user: user, story: story, created_at: (Comment::DELETEABLE_DAYS + 1).days.ago)
+      expect(comment.is_disownable_by_user?(user)).to be true
+    end
+
+    it "is false for comments with a modlog_use hat" do
+      hat = create(:hat, user: user, modlog_use: true)
+      comment = create(:comment, user: user, story: story, hat: hat, created_at: (Comment::DELETEABLE_DAYS + 1).days.ago)
+      expect(comment.is_disownable_by_user?(user)).to be false
+    end
+
+    it "is true for old comments with a non-modlog hat" do
+      hat = create(:hat, user: user, modlog_use: false)
+      comment = create(:comment, user: user, story: story, hat: hat, created_at: (Comment::DELETEABLE_DAYS + 1).days.ago)
+      expect(comment.is_disownable_by_user?(user)).to be true
+    end
+  end
+
   describe "hat" do
     it "can't be worn if user doesn't have that hat" do
       comment = build(:comment, hat: build(:hat))

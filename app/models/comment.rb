@@ -387,7 +387,8 @@ class Comment < ApplicationRecord
   end
 
   def is_disownable_by_user?(user)
-    user && user.id == user_id && created_at && created_at < DELETEABLE_DAYS.days.ago
+    user && user.id == user_id && created_at && created_at < DELETEABLE_DAYS.days.ago &&
+      !hat&.modlog_use
   end
 
   def is_flaggable?(user)

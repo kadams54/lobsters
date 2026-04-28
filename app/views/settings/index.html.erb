@@ -292,6 +292,12 @@
         below if you want all of your stories and comments to change to list
         <a href="/~inactive-user">inactive-user</a> instead of your username.
       </li>
+      <% if @user.hats.where(modlog_use: true).any? %>
+        <li>
+          <strong>Moderator:</strong> This will not affect comments using your moderator hat
+          because it would be too confusing.
+        </li>
+      <% end %>
     </ul>
 
     <div class="labelled_grid">

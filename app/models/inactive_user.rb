@@ -15,7 +15,12 @@ module InactiveUser
     # leave attribution on deleted stuff, which is generally very relevant to mods
     # when looking back at returning users
     author.stories.not_deleted(nil).update_all(user_id: inactive_user.id)
-    author.comments.active.update_all(user_id: inactive_user.id)
+    # leave attribution on comments made with a modlog hat, since disowning would
+    # be confusing when hat use is logged (see issue #1979)
+    author.comments.active
+      .where(hat_id: nil)
+      .or(author.comments.active.joins(:hat).where(hats: {modlog_use: false}))
+      .update_all(user_id: inactive_user.id)
     refresh_counts! author
   end
 

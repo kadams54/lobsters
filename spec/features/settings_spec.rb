@@ -45,6 +45,26 @@ RSpec.feature "Settings" do
       expect(user.comments_posted_count).to eq(0)
     end
 
+    scenario "disowning does not affect comments made with a modlog_use hat" do
+      hat = create(:hat, user: user, modlog_use: true)
+      hatted_comment = create(:comment, user: user, hat: hat)
+      regular_comment = create(:comment, user: user)
+      allow_any_instance_of(User).to receive(:authenticate).with("pass").and_return(true)
+
+      page.driver.post "/settings/deactivate", user: {
+        i_am_sure: 1, password: "pass", disown: 1
+      }
+
+      expect(hatted_comment.reload.user).to eq(user)
+      expect(regular_comment.reload.user).to eq(inactive_user)
+    end
+
+    scenario "shows modlog hat notice in deactivation form for users with modlog hats" do
+      create(:hat, user: user, modlog_use: true)
+      visit "/settings"
+      expect(page).to have_content("Moderator")
+    end
+
     scenario "uncertain" do
       story = create :story, user: user
       comment = create :comment, user: user

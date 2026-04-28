@@ -84,5 +84,14 @@ describe "comments", type: :request do
         expect(response.status).to eq(200)
       }.to change { comment.reload.user }.from(comment.user).to(inactive_user)
     end
+
+    it "refuses to disown a comment made with a modlog_use hat" do
+      hat = create(:hat, user: author, modlog_use: true)
+      comment.update!(hat: hat)
+      expect {
+        post "/comments/#{comment.short_id}/disown"
+        expect(response.status).to eq(400)
+      }.not_to change { comment.reload.user }
+    end
   end
 end
