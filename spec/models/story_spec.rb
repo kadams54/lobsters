@@ -37,6 +37,18 @@ describe Story do
     expect { create(:story, title: "hello") }.to_not raise_error
   end
 
+  it "does not allow titles composed only of invisible Unicode characters" do
+    lrm = "\u200E" # Left-to-Right Mark (U+200E), codepoint 8206
+    expect { create(:story, title: lrm) }.to raise_error
+    expect { create(:story, title: lrm * 5) }.to raise_error
+  end
+
+  it "strips invisible Unicode format characters from titles" do
+    lrm = "\u200E"
+    s = Story.new(title: "#{lrm}Hello World#{lrm}")
+    expect(s.title).to eq("Hello World")
+  end
+
   it "does not allow too-long titles" do
     expect { create(:story, title: ("hello" * 100)) }.to raise_error
   end

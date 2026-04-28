@@ -957,8 +957,9 @@ class Story < ApplicationRecord
   end
 
   def title=(t)
-    # change unicode whitespace characters into real spaces
-    self[:title] = t.to_s.strip.gsub(/[.,;:!]*$/, "")
+    # strip invisible Unicode format characters (e.g. U+200E LEFT-TO-RIGHT MARK),
+    # then change unicode whitespace characters into real spaces
+    self[:title] = t.to_s.gsub(/\p{Cf}/, "").strip.gsub(/[.,;:!]*$/, "")
   end
 
   def title_as_slug
